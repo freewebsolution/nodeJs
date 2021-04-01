@@ -1,4 +1,5 @@
-const http = require('http')
+const express = require ('express')
+const app = express();
 const userData = [
     {
         "id": 1,
@@ -16,10 +17,12 @@ const userData = [
         "username": "Giorgia@virgilio.com"
     }
 ]
+app.get('/',(request,response) => {
+    response.send('<h1>Hello world!</h1>')
+})
 
-const app = http.createServer((request, response) => {
-    response.writeHead(200, { 'Content-type': 'text/plain' })
-    response.end(JSON.stringify(userData))
+app.get('/api/notes', (request, response) => {
+    response.json(userData)
 })
 
 const PORT = 3001
