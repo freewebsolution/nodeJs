@@ -74,9 +74,27 @@ app.get('/api/notes/:id',(request,response) => {
     })
 
     // Aggiungi Nota
-
+const generateId = () => {
+    const maxId = notes.length > 0
+        ? Math.max(...notes.map(n => n.id)) : 0
+        return maxId + 1
+}
     app.post('/api/notes',(request, response) => {
         const nota = request.body
+        if(!body.tema){
+            return response.status(404).json({
+                error:'Contenuto vuoto'
+            })
+        }
+        const nota = {
+            tema:body.tema,
+            important: body.important,
+            date: new Date,
+            giorno: body.giorno,
+            ora:body.ora,
+            id: generateId()
+        }
+        notes=notes.concat(nota)
         console.log(nota)
         response.json(nota)
     })
