@@ -1,5 +1,6 @@
 const express = require ('express')
 const app = express();
+app.use(express.json())
 const notes = [
     {
         "tema": "partita juve",
@@ -70,6 +71,14 @@ app.get('/api/notes/:id',(request,response) => {
         const id = Number(request.params.id)
         const note = notes.filter(note => note.id !== id)
         response.status(204).end()
+    })
+
+    // Aggiungi Nota
+
+    app.post('/api/notes',(request, response) => {
+        const nota = request.body
+        console.log(nota)
+        response.json(nota)
     })
 const PORT = 3001
 app.listen(PORT)
