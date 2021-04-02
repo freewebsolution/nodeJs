@@ -1,4 +1,4 @@
-const express = require ('express')
+const express = require('express')
 const app = express();
 app.use(express.json())
 const notes = [
@@ -43,8 +43,11 @@ const notes = [
         "id": 5
     }
 ]
+
+
+
 //Home page
-app.get('/',(request,response) => {
+app.get('/', (request, response) => {
     response.send('<h1>Hello world!</h1>')
 })
 //Recupera tutte le note
@@ -54,50 +57,52 @@ app.get('/api/notes', (request, response) => {
 
 //Recupera singola nota
 
-app.get('/api/notes/:id',(request,response) => {
+app.get('/api/notes/:id', (request, response) => {
     const id = Number(request.params.id)
     const note = notes.find(note => note.id === id)
-    if (note){
+    if (note) {
         response.json(note)
-    }else {
+    } else {
         response.status(404).end()
     }
-  
-    })
 
-    //elmina nota
+})
 
-    app.delete('/api/notes/:id',(request,response) => {
-        const id = Number(request.params.id)
-        const note = notes.filter(note => note.id !== id)
-        response.status(204).end()
-    })
+//elmina nota
 
-    // Aggiungi Nota
+app.delete('/api/notes/:id', (request, response) => {
+    const id = Number(request.params.id)
+    const note = notes.filter(note => note.id !== id)
+    response.status(204).end()
+})
+
+// Aggiungi Nota
 const generateId = () => {
     const maxId = notes.length > 0
         ? Math.max(...notes.map(n => n.id)) : 0
-        return maxId + 1
+    return maxId + 1
 }
-    app.post('/api/notes',(request, response) => {
-        const nota = request.body
-        if(!body.tema){
-            return response.status(404).json({
-                error:'Contenuto vuoto'
-            })
-        }
-        const nota = {
-            tema:body.tema,
-            important: body.important,
-            date: new Date,
-            giorno: body.giorno,
-            ora:body.ora,
-            id: generateId()
-        }
-        notes=notes.concat(nota)
-        console.log(nota)
-        response.json(nota)
-    })
+app.post('/api/notes', (request, response) => {
+    const body = request.body
+    if (!body.tema) {
+        return response.status(404).json({
+            error: 'Contenuto vuoto'
+        })
+    }
+    const nota = {
+        tema: body.tema,
+        important: body.important,
+        date: new Date,
+        giorno: body.giorno,
+        ora: body.ora,
+        id: generateId()
+    }
+    notes = notes.concat(nota)
+    console.log(nota)
+    response.json(nota)
+})
+
+
 const PORT = 3001
 app.listen(PORT)
 console.log(`Server running on port ${PORT}`)
