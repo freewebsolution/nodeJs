@@ -10,12 +10,12 @@ const notes = [
         "id": 1
     },
     {
+        "id": 2,
         "tema": "chiamare andrea",
         "giorno": "2021-03-25T23:00:00.000Z",
         "ora": "19:45",
         "data": "2021-03-23T17:42:19.802Z",
-        "important": false,
-        "id": 2
+        "important": false
     },
     {
         "tema": "partita juve",
@@ -54,11 +54,23 @@ app.get('/api/notes', (request, response) => {
 //Recupera singola nota
 
 app.get('/api/note/:id',(request,response) => {
-    const id = request.params.id
+    const id = Number(request.params.id)
     const note = notes.find(note => note.id === id)
-    console.log(note)
-    response.json(note)
-})
+    if (note){
+        response.json(note)
+    }else {
+        response.status(404).end()
+    }
+  
+    })
+
+    //elmina nota
+
+    app.delete('/api/note/:id',(requist,response) => {
+        const id = Number(request.params.id)
+        const note = notes.filter(note => note.id !== id)
+        response.status(204).end()
+    })
 const PORT = 3001
 app.listen(PORT)
 console.log(`Server running on port ${PORT}`)
