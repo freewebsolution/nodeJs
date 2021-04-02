@@ -1,7 +1,19 @@
 const express = require('express')
 const app = express();
 app.use(express.json())
-const notes = [
+
+//Middleware
+const requestLogger = (request, response, next) => {
+    console.log('Method:', request.method)
+    console.log('Path:', request.path)
+    console.log('Body:', request.body)
+    console.log('---')
+    next()
+}
+app.use(requestLogger)
+
+
+let notes = [
     {
         "tema": "partita juve",
         "giorno": "2021-04-06T22:00:00.000Z",
@@ -43,8 +55,6 @@ const notes = [
         "id": 5
     }
 ]
-
-
 
 //Home page
 app.get('/', (request, response) => {
@@ -101,7 +111,10 @@ app.post('/api/notes', (request, response) => {
     console.log(nota)
     response.json(nota)
 })
-
+const unknowEndpoint = (request, response) => {
+    response.status(404).send({ error: 'unknow endpoint' })
+}
+app.use(unknowEndpoint)
 
 const PORT = 3001
 app.listen(PORT)
