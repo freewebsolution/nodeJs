@@ -53,7 +53,7 @@ app.get('/api/notes', (request, response) => {
 
 //Recupera singola nota
 
-app.get('/api/note/:id',(request,response) => {
+app.get('/api/notes/:id',(request,response) => {
     const id = Number(request.params.id)
     const note = notes.find(note => note.id === id)
     if (note){
@@ -66,7 +66,7 @@ app.get('/api/note/:id',(request,response) => {
 
     //elmina nota
 
-    app.delete('/api/note/:id',(requist,response) => {
+    app.delete('/api/notes/:id',(request,response) => {
         const id = Number(request.params.id)
         const note = notes.filter(note => note.id !== id)
         response.status(204).end()
