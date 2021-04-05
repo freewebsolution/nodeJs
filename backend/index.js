@@ -5,7 +5,7 @@ app.use(express.json())
 const cors = require('cors')
 app.use(express.static('build'))
 app.use(cors())
-const Note = require ('./models/note')
+const Note = require('./models/note')
 //Middleware
 const requestLogger = (request, response, next) => {
     console.log('Method:', request.method)
@@ -22,8 +22,8 @@ app.get('/', (request, response) => {
 })
 //Recupera tutte le note
 app.get('/api/notes', (request, response) => {
-    Note.find({}).then(notes=>{
-          response.json(notes)  
+    Note.find({}).then(notes => {
+        response.json(notes)
     })
 
 })
@@ -31,14 +31,10 @@ app.get('/api/notes', (request, response) => {
 //Recupera singola nota
 
 app.get('/api/notes/:id', (request, response) => {
-    const id = Number(request.params.id)
-    const note = notes.find(note => note.id === id)
-    if (note) {
-        response.json(note)
-    } else {
-        response.status(404).end()
-    }
-
+    Note.findById(request.params.id)
+    .then(n => {
+        response.json(n)
+    })
 })
 
 //elmina nota
@@ -50,11 +46,6 @@ app.delete('/api/notes/:id', (request, response) => {
 })
 
 // Aggiungi Nota
-const generateId = () => {
-    const maxId = notes.length > 0
-        ? Math.max(...notes.map(n => n.id)) : 0
-    return maxId + 1
-}
 app.post('/api/notes', (request, response) => {
     const body = request.body
     if (!body.tema) {
@@ -62,24 +53,24 @@ app.post('/api/notes', (request, response) => {
             error: 'Contenuto vuoto'
         })
     }
-    const nota = {
+    const nota = new Note({
         tema: body.tema,
-        important: body.important,
+        important: body.important || false,
         date: new Date,
         giorno: body.giorno,
         ora: body.ora,
-        id: generateId()
-    }
-    notes = notes.concat(nota)
-    console.log(nota)
-    response.json(nota)
+    })
+    nota.save().then(savedNote => {
+        response.json(savedNote)
+    })
 })
+
 const unknowEndpoint = (request, response) => {
     response.status(404).send({ error: 'unknow endpoint' })
 }
 app.use(unknowEndpoint)
 
 const PORT = process.env.PORT
-app.listen(PORT,() =>{
-   console.log(`Server running on port ${PORT}`) 
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`)
 })
