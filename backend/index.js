@@ -4,25 +4,7 @@ app.use(express.json())
 const cors = require('cors')
 app.use(express.static('build'))
 app.use(cors())
-const mongoose = require('mongoose')
-const password = 'secret123456'
-const url = `mongodb+srv://lucioTicali:${password}@cluster0.ncufe.mongodb.net/note-db?retryWrites=true&w=majority`
-mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true })
-const noteSchema = new mongoose.Schema({
-    tema: String,
-    date: Date,
-    important: Boolean,
-    giorno: Date,
-    ora: String
-})
-noteSchema.set('toJSON',{
-    transform:(document, returnedObject)=> {
-        returnedObject.id = returnedObject._id.toString()
-        delete returnedObject.__v
-        delete returnedObject._id
-    }
-})
-const Note = mongoose.model('Note', noteSchema)
+const Note = require ('./models/note')
 //Middleware
 const requestLogger = (request, response, next) => {
     console.log('Method:', request.method)
