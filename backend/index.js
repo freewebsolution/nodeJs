@@ -33,7 +33,16 @@ app.get('/api/notes', (request, response) => {
 app.get('/api/notes/:id', (request, response) => {
     Note.findById(request.params.id)
     .then(n => {
-        response.json(n)
+        if(n){
+               response.json(n)   
+        }else {
+            response.status(404).end()
+        }
+  
+    })
+    .catch(error => {
+        console.log(error)
+        response.status(400).send({error: 'Malformatted id'})
     })
 })
 
