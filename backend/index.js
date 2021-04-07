@@ -30,7 +30,7 @@ app.get('/api/notes', (request, response) => {
 
 //Recupera singola nota
 
-app.get('/api/notes/:id', (request, response) => {
+app.get('/api/notes/:id', (request, response, next) => {
     Note.findById(request.params.id)
     .then(n => {
         if(n){
@@ -40,10 +40,7 @@ app.get('/api/notes/:id', (request, response) => {
         }
   
     })
-    .catch(error => {
-        console.log(error)
-        response.status(400).send({error: 'Malformatted id'})
-    })
+    .catch(error => next(error))
 })
 
 //elmina nota
@@ -78,6 +75,15 @@ const unknowEndpoint = (request, response) => {
     response.status(404).send({ error: 'unknow endpoint' })
 }
 app.use(unknowEndpoint)
+
+const errorHandler = (error, request, response, next) => {
+    console.error(error.message)
+    if(error.name === 'CastError') {
+        return response.status(400).send({error: 'malformatted id'})
+    }
+    next (error)
+}
+app.use(errorHandler)
 
 const PORT = process.env.PORT
 app.listen(PORT, () => {
