@@ -73,6 +73,22 @@ app.post('/api/notes', (request, response) => {
     })
 })
 
+app.put('/api/notes/:id',(request, response ,next) => {
+    const body = request.body
+    const note = {
+        tema: body.tema,
+        important: body.important,
+        date: new Date,
+        giorno: body.giorno,
+        ora: body.ora,
+    }
+    Note.findByIdAndUpdate(request.params.id, note , {new:true})
+    .then(updateNote => {
+        response.json(updateNote)
+    })
+    .catch(error => next(error))
+})
+
 const unknowEndpoint = (request, response) => {
     response.status(404).send({ error: 'unknow endpoint' })
 }
