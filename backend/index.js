@@ -45,10 +45,12 @@ app.get('/api/notes/:id', (request, response, next) => {
 
 //elmina nota
 
-app.delete('/api/notes/:id', (request, response) => {
-    const id = Number(request.params.id)
-    const note = notes.filter(note => note.id !== id)
-    response.status(204).end()
+app.delete('/api/notes/:id', (request, response, next) => {
+    Note.findByIdAndRemove(request.params.id)
+    .then(result => {
+        response.status(204).end()
+    })
+    .catch(error => next(error))
 })
 
 // Aggiungi Nota
