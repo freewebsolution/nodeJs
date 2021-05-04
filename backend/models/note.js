@@ -7,6 +7,7 @@ const noteSchema = new mongoose.Schema({
     giorno: Date,
     ora: String
 })
+
 noteSchema.set('toJSON', {
     transform: (document, returnedObject) => {
         returnedObject.id = returnedObject._id.toString()
@@ -14,4 +15,5 @@ noteSchema.set('toJSON', {
         delete returnedObject._id
     }
 })
-module.exports = mongoose.model('Note',noteSchema)
+
+module.exports = mongoose.model('Note', noteSchema)
