@@ -1,17 +1,18 @@
 {
-  "name": "backend",
+  "name": "react-backend",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon index.js --ignore client",
+    "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build:ui": "rm -rf build && cd E:/APP/REACT/ReactHooks/notes && npm run build --prod && cp -r build E:/APP/REACT/NODEJS/backend/",
+    "build:ui": "rm -rf build && cd E:/APP/REACT/HooksCourse/note && npm run build --prod && cp -r build E:/APP/REACT/react-backend",
     "deploy": "git push heroku HEAD:main",
     "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && npm run deploy",
     "logs:prod": "heroku logs --tail"
   },
+  "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
