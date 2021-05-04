@@ -10,7 +10,8 @@
     "build:ui": "rm -rf build && cd E:/APP/REACT/ReactHooks/notes && npm run build --prod && cp -r build E:/APP/REACT/NODEJS/backend/",
     "deploy": "git push heroku HEAD:main",
     "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && npm run deploy",
-    "logs:prod": "heroku logs --tail"
+    "logs:prod": "heroku logs --tail",
+    "stop": "taskkill -F -IM node.exe"
   },
   "author": "",
   "license": "ISC",
