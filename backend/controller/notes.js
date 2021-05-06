@@ -4,27 +4,10 @@ const Note = require('../models/note')
 
 //Recupera tutte le note
 
-notesRouter.get('/', (request, response) => {
-    Note.find({}).then(notes => {
+notesRouter.get('/', async (request, response) => {
+    const notes = await Note.find({})
         response.json(notes)
     })
-
-    /*     Note.find({})
-        .then(notes => {
-            return notes[0].remove()
-        })
-        .then(response => {
-            console.log('La prima nota è stata rimossa', notes)
-        }) */
-    /*     const main = async () => {
-           const notes = await Note.find({})
-           console.log('Ritorna tutte le note',notes)
-   
-           const response = await notes[0].remove()
-           console.log('La prima nota è stata eliminata') 
-       }
-       main()*/
-})
 
 
 //Recupera singola nota
