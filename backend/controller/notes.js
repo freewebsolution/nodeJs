@@ -4,10 +4,10 @@ const Note = require('../models/note')
 
 //Recupera tutte le note
 
-notesRouter.get('/', async (request, response) => {
+ notesRouter.get('/', async (request, response) => {
     const notes = await Note.find({})
         response.json(notes)
-    })
+    }) 
 
 
 //Recupera singola nota
@@ -36,13 +36,9 @@ notesRouter.delete('/:id', (request, response, next) => {
 })
 
 // Aggiungi Nota
-notesRouter.post('/', (request, response) => {
+notesRouter.post('/',async (request, response,next) => {
     const body = request.body
-    if (!body.tema) {
-        return response.status(404).json({
-            error: 'Contenuto vuoto'
-        })
-    }
+
     const nota = new Note({
         tema: body.tema,
         important: body.important || false,
@@ -50,9 +46,8 @@ notesRouter.post('/', (request, response) => {
         giorno: body.giorno,
         ora: body.ora,
     })
-    nota.save().then(savedNote => {
+    const savedNote = await nota.save()
         response.json(savedNote)
-    })
 })
 
 notesRouter.put('/:id', (request, response, next) => {
