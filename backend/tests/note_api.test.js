@@ -8,12 +8,17 @@ const Note = require('../models/note')
 
 beforeEach(async () => {
     await Note.deleteMany({})
-    let noteObject = new Note(helper.initialNotes[0])
-    await noteObject.save()
-    noteObject = new Note(helper.initialNotes[1])
-    await noteObject.save()
+    const noteObject = helper.initialNotes
+        .map(note => new Note(note))
+
+    const promiseArray = noteObject.map(note => note.save())
+    await Promise.all(promiseArray)
+
+    // noteObject = new Note(helper.initialNotes[1])
+    // await noteObject.save()
 })
 test('notes are returned as json', async () => {
+    console.log('entered test')
     await api
         .get('/api/notes')
         .expect(200)
@@ -28,13 +33,13 @@ test('there are two notes', async () => {
 test('the first note is about HTTP methods', async () => {
     const response = await api.get('/api/notes')
 
-    const contents = response.body.map(r =>r.tema)
+    const contents = response.body.map(r => r.tema)
     expect(contents).toContain(
         'Appuntamento da ore 10:00 da Riccardo Compagnoni'
     )
 })
 
-test('a valid note can be added', async()=>{
+test('a valid note can be added', async () => {
     const newNote = {
         tema: 'Riunione consiglio di classe a scuola di Giorgia',
         date: new Date(),
@@ -46,7 +51,7 @@ test('a valid note can be added', async()=>{
         .post('/api/notes')
         .send(newNote)
         .expect(200)
-        .expect('Content-Type',/application\/json/)
+        .expect('Content-Type', /application\/json/)
 
     const notesAtEnd = await helper.notesInDb()
     const contents = notesAtEnd.map(r => r.tema)
@@ -56,30 +61,30 @@ test('a valid note can be added', async()=>{
     )
 })
 
-test('note without content is not added', async ()=>{
+test('note without content is not added', async () => {
     const newNote = {
-        important:true
+        important: true
     }
     await api
         .post('/api/notes')
         .send(newNote)
         .expect(500)
-    const notesAtEnd =await helper.notesInDb()
+    const notesAtEnd = await helper.notesInDb()
     expect(notesAtEnd).toHaveLength(helper.initialNotes.length)
 })
 
-test('a specific note can be viewed', async()=>{
+test('a specific note can be viewed', async () => {
     const notesAsStart = await helper.notesInDb()
 
     const noteToView = notesAsStart[0]
-    const resultNote= await api
+    const resultNote = await api
         .get(`/api/notes/${noteToView.id}`)
         .expect(200)
         .expect('Content-Type', /application\/json/)
     const processedNoteToView = JSON.parse(JSON.stringify(noteToView))
     expect(resultNote.body).toEqual(processedNoteToView)
 })
-test('a note can ben deleted', async()=>{
+test('a note can ben deleted', async () => {
     const notesAsStart = await helper.notesInDb()
 
     const noteToDelete = notesAsStart[0]
