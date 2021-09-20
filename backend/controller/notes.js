@@ -3,10 +3,10 @@ const Note = require('../models/note')
 const User = require('../models/user')
 //Recupera tutte le note
 
-notesRouter.get('/', (request, response) => {
-    Note.find({}).then(notes => {
-        response.json(notes)
-    })
+notesRouter.get('/',async (request, response) => {
+    const note = await Note
+        .find({}).populate('user', { username: 2, name: 2 })
+    response.json(note)
 })
 
 //Recupera singola nota
@@ -35,7 +35,7 @@ notesRouter.delete('/:id', (request, response, next) => {
 })
 
 // Aggiungi Nota
-notesRouter.post('/',async (request, response,next) => {
+notesRouter.post('/', async (request, response, next) => {
     const body = request.body
     const user = await User.findById(body.userId)
     if (!body.tema) {
