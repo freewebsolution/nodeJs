@@ -1,6 +1,7 @@
 const notesRouter = require('express').Router()
 const Note = require('../models/note')
 const User = require('../models/user')
+const jwt = require('jsonwebtoken')
 //Recupera tutte le note
 
 notesRouter.get('/',async (request, response) => {
@@ -34,10 +35,23 @@ notesRouter.delete('/:id', (request, response, next) => {
         .catch(error => next(error))
 })
 
+const getTokenFrom = request => {
+    const authorization = request.get('authorization')
+    if (authorization && authorization.toLowerCase().startsWith('bearer')){
+        return authorization.substring(7)
+    }
+    return null
+}
+
 // Aggiungi Nota
 notesRouter.post('/', async (request, response, next) => {
     const body = request.body
-    const user = await User.findById(body.userId)
+    const token = getTokenFrom(request)
+    const decodedToken = jwt.verify(token, process.env.SECRET)
+    if(!token || !decodedToken.id){
+        return response.status(401).json({error: 'token missiing or invalid'})
+    }
+    const user = await User.findById(decodedToken.id)
     if (!body.tema) {
         return response.status(404).json({
             error: 'Contenuto vuoto'
