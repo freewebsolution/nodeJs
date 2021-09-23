@@ -1,0 +1,11 @@
+post http://localhost:3001/api/notes
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imdpb3JnaWEiLCJpZCI6IjYxNDhjNDE3MzVhNDFjMmM0NDE4OTcwYSIsImlhdCI6MTYzMjM4MDgwNX0.y3ubAJ6F_AHSB0XEFyYydfjh83rwQl35ShgXNAZzM60
+
+{
+    "tema":"Oggi ultima notte finalmente",
+    "important":true,
+    "giorno":"2021-01-22T08:15:36.196+00:00",
+    "ora":"22:00",
+    "userId":"6147273a697bb910e00508ce"
+}
